@@ -18,31 +18,25 @@ class Issue extends React.Component {
       })
       .catch((err) => console.log(err));
   }
-  componentDidUpdate() {
-    console.log("componentDidUpdate");
-  }
-  componentWillUnmount() {
-    console.log("componentWillUnmount");
-  }
 
-  handleDelete = (issueType) => {
-   
+  handleDelete = (issue) => {
     axios
-      .delete(`http://localhost:8181/api/getallIssues/call${issueType}`)
+      .delete(`http://localhost:8181/api/closeCustomerIssue/${issue}`)
       .then((res) => {
         console.log(res);
         // Update front end parallely
-        const issue = this.state.issue.filter((s) => s.issueType!= issueType);
-        this.setState({issue: issue});
-        alert(res.data.issueType+ " deleted succussfully!");
-        
+        const issue = this.state.issue.filter((s) => s.issue != issue);
+        this.setState({ issue: issue });
+        // alert(res.data.issueType+ " deleted succussfully!");
       })
       .catch((err) => console.log(err));
   };
   render() {
     return (
       <div className="w-75 mx-auto">
-        <button className="btn btn-info float-end">Add</button>
+        <Link to="/issue/add" className="btn btn-info float-end">
+          Add
+        </Link>
         <table className="table">
           <thead>
             <tr>
@@ -50,7 +44,7 @@ class Issue extends React.Component {
               <th>Description</th>
               <th>IssueStatus</th>
               <th>IssueType</th>
-             
+
               <th>Actions</th>
             </tr>
           </thead>
@@ -61,15 +55,14 @@ class Issue extends React.Component {
                 <td>{s.description}</td>
                 <td>{s.issueStatus}</td>
                 <td>{s.issueType}</td>
-               
+
                 <td>
-                <Link
+                  <Link
                     to={`/issue/update/${s.issueId}`}
                     className="btn btn-primary"
                   >
                     Update
-
-                    </Link>
+                  </Link>
                   <button
                     className="btn btn-danger"
                     onClick={() => this.handleDelete(s.issueType)}
@@ -87,4 +80,3 @@ class Issue extends React.Component {
 }
 
 export default Issue;
-
